@@ -8,11 +8,6 @@ const authValidators = {
       .isLength({ min: 3 })
       .withMessage("Name must be atleast 3 character."),
 
-    body("username")
-      .isString()
-      .isLength({ min: 3 })
-      .withMessage("Username must be atleast 3 character."),
-
     body("email")
       .isEmail()
       .withMessage("Please enter valid email.")
@@ -30,10 +25,6 @@ const authValidators = {
       minUppercase: 1,
       minSymbols: 1,
     }),
-
-    body("phone")
-      .isMobilePhone("en-IN")
-      .withMessage("Please enter valid mobile number."),
   ],
 
   login: [

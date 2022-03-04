@@ -1,5 +1,5 @@
 {
-  "name": "express-sql-server",
+  "name": "wallet-tracker-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,9 +12,11 @@
   "author": "Ashif",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "env-cmd": "^10.1.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1"
   },
   "devDependencies": {

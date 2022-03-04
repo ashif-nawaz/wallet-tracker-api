@@ -1,4 +1,4 @@
 import authValidators from "./auth.js";
-import taskValidators from "./task.js";
+import expenseValidators from "./expense.js";
 
-export { authValidators, taskValidators };
+export { authValidators, expenseValidators };

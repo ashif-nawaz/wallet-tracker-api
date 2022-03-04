@@ -1,2 +1,2 @@
 export * as auth from "./auth.js";
-export * as task from "./task.js";
+export * as expense from "./expense.js";

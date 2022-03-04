@@ -1,18 +1,33 @@
 import { User } from "../../../models/index.js";
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const signup = async (req, res, next) => {
   const validationErrors = validationResult(req);
+
   try {
-    // const user = new User({
-    //   name: req.body.name,
-    //   username: req.body.username,
-    //   email: req.body.email,
-    //   password: req.body.password,
-    //   phone: req.body.phone,
-    // });
-    // const resp = await user.save();
-    res.json(validationErrors.array());
+    if (!validationErrors.isEmpty()) {
+      return res.json({
+        status: 401,
+        data: validationErrors.array(),
+        message: validationErrors.array()[0].msg,
+      });
+    }
+
+    const { name, email, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await User.create({ name, email, password: hashedPassword });
+    res.json({
+      status: 201,
+      data: {
+        name: user.name,
+        email: user.email,
+        userId: user._id,
+      },
+      message: "Registration successful.",
+    });
   } catch (error) {
     next(error);
   }
@@ -21,7 +36,39 @@ const signup = async (req, res, next) => {
 const login = async (req, res, next) => {
   const validationErrors = validationResult(req);
   try {
-    res.json(validationErrors.array());
+    if (!validationErrors.isEmpty()) {
+      return res.json({
+        status: 401,
+        data: validationErrors.array(),
+        message: validationErrors.array()[0].msg,
+      });
+    }
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+    const doMatch = await bcrypt.compare(password, user.password);
+    if (!doMatch) {
+      throw { status: 401, message: "Invalid password" };
+    }
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        userName: user.name,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.status(200).json({
+      status: 200,
+      data: {
+        token: token,
+        userName: user.name,
+        id: user._id,
+      },
+      success: true,
+    });
   } catch (error) {
     next(error);
   }

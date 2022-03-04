@@ -1,4 +1,4 @@
 import User from "./user.js";
-import Task from "./task.js";
+import Expense from "./expense.js";
 
-export { User, Task };
+export { User, Expense };
